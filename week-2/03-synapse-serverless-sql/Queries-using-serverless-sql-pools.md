@@ -1,9 +1,3 @@
----
-lab:
-    title: 'Run interactive queries using serverless SQL pools'
-    module: 'Module 2'
----
-
 # Lab - Run interactive queries using serverless SQL pools
 
 In this lab, you will learn how to work with files stored in the data lake and external file sources, through T-SQL statements executed by a serverless SQL pool in Azure Synapse Analytics. You will query Parquet files stored in a data lake, as well as CSV files stored in an external data store. Next, you will create Azure Active Directory security groups and enforce access to files in the data lake through Role-Based Access Control (RBAC) and Access Control Lists (ACLs).
@@ -20,9 +14,15 @@ After completing this lab, you will be able to:
 
 Before starting with Synapse Serverless SQL Pools, let's upload some sample data to your data lake.
 
-* Use the storage account you created in the past week - keep the name somewhere at hand (you will need this later on)
-* Within the storage account, create a container called `wwi-02`
-* Using Azure Storage Explorer, upload the contents of 
+- First of all: make sure you either *clone* or *download* this repository. This makes uploading lots of files a lot easier.
+
+- If you don't have a Synapse Workspace, create one
+- Use the storage account linked to Synapse Workspace - keep the name somewhere at hand (you will need this later on)
+  - Whenever you encounter `YOUR_STORAGE_ACCOUNT_NAME` in scripts, be sure to replace it with the name of your storage account :-).
+- Within the storage account, create a container called `wwi-02`
+- Using Azure Storage Explorer, upload the contents of the `analytics-in-azure/week-2/03-synapse-serverless-sql/files-to-upload/` folder inside this GitHub repo in your `wwi-02` container.
+  - Your `wwi-02` container should now contain two folders: `customer-info` and `sale-small`
+
 
 ## Exercise 1: Querying a Data Lake Store using serverless SQL pools in Azure Synapse Analytics
 
@@ -40,7 +40,7 @@ When you query Parquet files using serverless SQL pools, you can explore the dat
 
     ![The Data menu item is highlighted.](images/data-hub.png "Data hub")
 
-2. In the pane on the left, on the **Linked** tab, expand **Azure Data Lake Storage Gen2** and the **asaworkspace*xxxxxx***  primary ADLS Gen2 account, and select the **wwi-02** container
+2. In the pane on the left, on the **Linked** tab, expand **Azure Data Lake Storage Gen2** and the **YOUR_STORAGE_ACCOUNT_NAME**  primary ADLS Gen2 account, and select the **wwi-02** container
 3. In the **sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231** folder, right-click the **sale-small-20191231-snappy.parquet** file, select **New SQL script**, and then select **Select TOP 100 rows**.
 
     ![The Data hub is displayed with the options highlighted.](images/data-hub-parquet-select-rows.png "Select TOP 100 rows")
@@ -63,7 +63,7 @@ When you query Parquet files using serverless SQL pools, you can explore the dat
             SUM(Quantity) AS [(sum) Quantity]
     FROM
         OPENROWSET(
-            BULK 'https://asadatalakeSUFFIX.dfs.core.windows.net/wwi-02/sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231/sale-small-20191231-snappy.parquet',
+            BULK 'https://YOUR_STORAGE_ACCOUNT_NAME.dfs.core.windows.net/wwi-02/sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231/sale-small-20191231-snappy.parquet',
             FORMAT='PARQUET'
         ) AS [r] GROUP BY r.TransactionDate, r.ProductId;
     ```
@@ -77,7 +77,7 @@ When you query Parquet files using serverless SQL pools, you can explore the dat
         COUNT(*)
     FROM
         OPENROWSET(
-            BULK 'https://asadatalakeSUFFIX.dfs.core.windows.net/wwi-02/sale-small/Year=2019/*/*/*/*',
+            BULK 'https://YOUR_STORAGE_ACCOUNT_NAME.dfs.core.windows.net/wwi-02/sale-small/Year=2019/*/*/*/*',
             FORMAT='PARQUET'
         ) AS [r];
     ```
@@ -123,7 +123,7 @@ CREATE EXTERNAL TABLE All2019Sales (
     )
     WITH (
     LOCATION = 'sale-small/Year=2019/*/*/*/*.parquet',
-    DATA_SOURCE = [wwi-02_asadatalakeSUFFIX_dfs_core_windows_net],
+    DATA_SOURCE = [wwi-02_YOUR_STORAGE_ACCOUNT_NAME_dfs_core_windows_net],
     FILE_FORMAT = [SynapseParquetFormat]
     )
 GO
@@ -250,7 +250,7 @@ Let's create a view to wrap a SQL query. Views allow you to reuse queries and ar
     CREATE VIEW CustomerInfo AS
         SELECT * 
     FROM OPENROWSET(
-            BULK 'https://asadatalakeSUFFIX.dfs.core.windows.net/wwi-02/customer-info/customerinfo.csv',
+            BULK 'https://YOUR_STORAGE_ACCOUNT_NAME.dfs.core.windows.net/wwi-02/customer-info/customerinfo.csv',
             FORMAT = 'CSV',
             PARSER_VERSION='2.0',
             FIRSTROW=2
@@ -293,7 +293,7 @@ Let's create a view to wrap a SQL query. Views allow you to reuse queries and ar
     - **3) External file formats**: *QuotedCsvWithHeader* and *SynapseParquetFormat*.
     - **4) Views**: *CustomerInfo*
 
-## Exercise 2 - Securing access to data using a serverless SQL pool in Azure Synapse Analytics
+## OPTIONAL: Exercise 2 - Securing access to data using a serverless SQL pool in Azure Synapse Analytics
 
 Tailwind Traders wants to enforce that any kind of modifications to sales data can happen in the current year only, while allowing all authorized users to query the entirety of data. They have a small group of admins who can modify historic data if needed.
 
@@ -365,9 +365,9 @@ To test out the permissions, we will add your own account to the groups.
 
 ### Task 3: Configure data lake security - Role-Based Access Control (RBAC)
 
-1. In the Azure portal, open the **data-engineering-synapse-*xxxxxxx*** resource group.
+1. In the Azure portal, open resource group where your Data Lake Store is located.
 
-2. Open the **asadatalake*xxxxxxx*** storage account.
+2. Open the **YOUR_STORAGE_ACCOUNT_NAME** storage account.
 
     ![The storage account is selected.](images/resource-group-storage-account.png "Resource group")
 
@@ -431,7 +431,7 @@ To test out the permissions, we will add your own account to the groups.
 
 ### Task 5: Test permissions
 
-1. In Synapse Studio, in the **Data** hub, on the **Linked** tab select the **Azure Data Lake Storage Gen2/asaworkspace*xxxxxxx*/wwi02** container; and in the *sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231* folder, right-click the **sale-small-20191231-snappy.parquet file**, select **New SQL script**, and select **Select TOP 100 rows**.
+1. In Synapse Studio, in the **Data** hub, on the **Linked** tab select the **Azure Data Lake Storage Gen2/YOUR_STORAGE_ACCOUNT_NAME/wwi02** container; and in the *sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231* folder, right-click the **sale-small-20191231-snappy.parquet file**, select **New SQL script**, and select **Select TOP 100 rows**.
 
     ![The Data hub is displayed with the options highlighted.](images/data-hub-parquet-select-rows.png "Select TOP 100 rows")
 
@@ -464,7 +464,7 @@ To test out the permissions, we will add your own account to the groups.
 7. Enter the following code, replacing *SUFFIX* with the unique suffix for your data lake resource (you can copy this from cell 1 above):
 
     ```python
-    df.write.parquet('abfss://wwi-02@asadatalakeSUFFIX.dfs.core.windows.net/sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231/sale-small-20191231-snappy-test.parquet')
+    df.write.parquet('abfss://wwi-02@YOUR_STORAGE_ACCOUNT_NAME.dfs.core.windows.net/sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231/sale-small-20191231-snappy-test.parquet')
     ```
 
 8. Run the new cell you just added. You should see a **403 error** in the output.
@@ -501,6 +501,6 @@ To test out the permissions, we will add your own account to the groups.
 
     Now let's verify that the file was written to the data lake.
 
-19. In Synapse Studio, in the **Data** hub, on the **Linked** tab select the **Azure Data Lake Storage Gen2/asaworkspace*xxxxxxx*/wwi02** container; and browse to the *sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231* folder to verify that a new file has been added to this folder.
+19. In Synapse Studio, in the **Data** hub, on the **Linked** tab select the **Azure Data Lake Storage Gen2/YOUR_STORAGE_ACCOUNT_NAME/wwi02** container; and browse to the *sale-small/Year=2019/Quarter=Q4/Month=12/Day=20191231* folder to verify that a new file has been added to this folder.
 
     ![The test Parquet file is displayed.](images/test-parquet-file.png "Test parquet file")
