@@ -124,7 +124,6 @@ Het artikel van Jesse is [hier](https://www.msbiblog.com/2020/02/17/streaming-tw
 > from azure.eventhub import EventData
 > from tweepy import Stream
 > from tweepy import OAuthHandler
-> from tweepy.streaming import StreamListener
 >
 > async def run(text):
 >     producer = EventHubProducerClient.from_connection_string(conn_str="Endpoint=sb://<NAME OF YOUR EVENTHUB NAMESPACE>.servicebus.windows.net/;SharedAccessKeyName=<NAME OF YOUR SHARED ACCESS KEY>;SharedAccessKey=<SHAREDACCES KEY>=", eventhub_name="<NAME OF YOUR EVENTHUB>")
@@ -134,7 +133,7 @@ Het artikel van Jesse is [hier](https://www.msbiblog.com/2020/02/17/streaming-tw
 >         event_data_batch.add(EventData(text))
 >         await producer.send_batch(event_data_batch)
 >        
-> class listener(StreamListener):
+> class listener(Stream):
 >    
 >     def on_data(self, data):
 >         loop = asyncio.get_event_loop()
@@ -153,7 +152,7 @@ Het artikel van Jesse is [hier](https://www.msbiblog.com/2020/02/17/streaming-tw
 > auth = OAuthHandler(ckey, csecret)
 > auth.set_access_token(atoken, asecret)
 >
-> twitterStream = Stream(auth, listener())
+> twitterStream = listener(ckey, csecret, atoken, asecret)
 > twitterStream.filter(track=["<KEYWORD YOU WANT TO LOOK FOR IN TWITTER>"])
 > ```
 >
