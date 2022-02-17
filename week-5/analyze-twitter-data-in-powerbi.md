@@ -127,7 +127,7 @@ Het artikel van Jesse is [hier](https://www.msbiblog.com/2020/02/17/streaming-tw
 > from tweepy.streaming import StreamListener
 >
 > async def run(text):
->     producer = EventHubProducerClient.from_connection_string(conn_str="Endpoint=sb://&lt;NAME OF YOUR EVENTHUB NAMESPACE&gt;.servicebus.windows.net/;SharedAccessKeyName=&lt;NAME OF YOUR SHARED ACCESS KEY&gt;;SharedAccessKey=&lt;SHAREDACCES KEY&gt;=", eventhub_name="&lt;NAME OF YOUR EVENTHUB&gt;")
+>     producer = EventHubProducerClient.from_connection_string(conn_str="Endpoint=sb://<NAME OF YOUR EVENTHUB NAMESPACE>.servicebus.windows.net/;SharedAccessKeyName=<NAME OF YOUR SHARED ACCESS KEY>;SharedAccessKey=<SHAREDACCES KEY>=", eventhub_name="<NAME OF YOUR EVENTHUB>")
 >     async with producer:
 >         # Create a batch.
 >         event_data_batch = await producer.create_batch()
@@ -145,16 +145,16 @@ Het artikel van Jesse is [hier](https://www.msbiblog.com/2020/02/17/streaming-tw
 >     def on_error(self, status):
 >         print(status)
 > #consumer key, consumer secret, access token, access secret.
-> ckey="&lt;TWITTER CONSUMER KEY&gt;"
-> csecret="&lt;TWITTER CONSUMER SECRET&gt;"
-> atoken="&lt;TWITTER ACCESS TOKEN&gt;"
-> asecret="&lt;TWITTER ACCESS SECRET&gt;"
+> ckey="<TWITTER CONSUMER KEY>"
+> csecret="<TWITTER CONSUMER SECRET>"
+> atoken="<TWITTER ACCESS TOKEN>"
+> asecret="<TWITTER ACCESS SECRET>"
 >
 > auth = OAuthHandler(ckey, csecret)
 > auth.set_access_token(atoken, asecret)
 >
 > twitterStream = Stream(auth, listener())
-> twitterStream.filter(track=&#91;"&lt;KEYWORD YOU WANT TO LOOK FOR IN TWITTER&gt;"])</code></pre>
+> twitterStream.filter(track=["<KEYWORD YOU WANT TO LOOK FOR IN TWITTER>"])
 > ```
 >
 > Be sure to fill in the values in for all the `<>` values I left in, such as `<TWITTER ACCESS TOKEN>`.
