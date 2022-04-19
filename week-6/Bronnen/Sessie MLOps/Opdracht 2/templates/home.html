@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html >
+<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<head>
+  <meta charset="UTF-8">
+  <title>Predict Insurance Bill</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./style.css') }}">
+  
+</head>
+
+<body>
+ 
+	<h1>Welkom!</h1>
+
+  <p>Dit is een klein voorbeeld van een webapplicatie in Flask</p>
+   
+  <p>Je hebt zojuist het commando <pre>docker run -d -p 5000:5000 webservercontainer</pre> uitgevoerd. Benieuwd naar wat dat allemaal betekent?</p>
+  <ul style="text-align: left">
+    <li><strong>docker</strong> - het container-programma dat we binnen deze VM gebruiken</li>
+    <ul>
+      <li><strong>run</strong> - we willen een container die al gebouwd is <em>uitvoeren</em>.</li>
+      <li><strong>-d</strong> - <em>detached</em>: doe dit op de achtergrond (zodat je <em>commandline</em> weer terugkomt en je nieuwe commando's kunt uitvoeren)</li>
+      <li><strong>-p 5000:5000</strong> - binnen de container hebben we webserver-poort nummer <em>5000</em> opengezet. Die willen we ook op onze host kunnen benaderen onder hetzelfde poortnummer. In je webadres zie je dit terug in de tekst <pre>:5000</pre></li>
+      <li><strong>webservercontainer</strong> - de <em>tag</em> van de container. Deze heb je opgegeven toen je <pre>docker build</pre> uitvoerde</li>
+    </ul>
+  </ul>
+</body>
+</html>
