@@ -13,20 +13,28 @@
 </head>
 
 <body>
+  <div class="login">
+   <h1>Predict Insurance Bill</h1>
  
-	<h1>Welkom!</h1>
-
-  <p>Dit is een klein voorbeeld van een webapplicatie in Flask</p>
+      <!-- Main Input For Receiving Query to our ML -->
+    <form action="{{ url_for('predict')}}"method="post">
+       <input type="text" name="age" placeholder="Age" required="required" /><br>
+       <input type="text" name="sex" placeholder="Sex" required="required" /><br>
+         <input type="text" name="bmi" placeholder="BMI" required="required" /><br>
+         <input type="text" name="children" placeholder="Children" required="required" /><br>
+         <input type="text" name="smoker" placeholder="Smoker" required="required" /><br>
+         <input type="text" name="region" placeholder="Region" required="required" /><br>
+        
+ 
+         <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+     </form>
+ 
+    <br>
+    <br>
    
-  <p>Je hebt zojuist het commando <pre>docker run -d -p 5000:5000 webservercontainer</pre> uitgevoerd. Benieuwd naar wat dat allemaal betekent?</p>
-  <ul style="text-align: left">
-    <li><strong>docker</strong> - het container-programma dat we binnen deze VM gebruiken</li>
-    <ul>
-      <li><strong>run</strong> - we willen een container die al gebouwd is <em>uitvoeren</em>.</li>
-      <li><strong>-d</strong> - <em>detached</em>: doe dit op de achtergrond (zodat je <em>commandline</em> weer terugkomt en je nieuwe commando's kunt uitvoeren)</li>
-      <li><strong>-p 5000:5000</strong> - binnen de container hebben we webserver-poort nummer <em>5000</em> opengezet. Die willen we ook op onze host kunnen benaderen onder hetzelfde poortnummer. In je webadres zie je dit terug in de tekst <pre>:5000</pre></li>
-      <li><strong>webservercontainer</strong> - de <em>tag</em> van de container. Deze heb je opgegeven toen je <pre>docker build</pre> uitvoerde</li>
-    </ul>
-  </ul>
+    
+  </div>
+  {{pred}}
+ 
 </body>
 </html>
